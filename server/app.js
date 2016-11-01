@@ -9,11 +9,14 @@ import mongoose from 'mongoose';
 import config from './config/envConfig';
 
 mongoose.connect(config.db);
-import routes from './routes';
+const routes = require('./routes');
 
 
 const app = express();
-routes(app);
+const apiRoutes = express.Router();
+const authRoutes = express.Router();
+apiRoutes.use('/auth', authRoutes);
+routes(authRoutes);
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -33,7 +36,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-
+app.use('/api', apiRoutes);
 // // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
 //   const err = new Error('Not Found');

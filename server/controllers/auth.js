@@ -14,7 +14,7 @@ const setUserInfo = (req) => ({
 
 // Generate token function
 const generateToken = (user) => {
-	jwt.sign(user._id, config.secret, {
+	jwt.sign(user.id, config.secret, {
 		expiresIn: '1680h'
 	})
 };
@@ -31,7 +31,6 @@ export const login = (req, res, next) => {
 // Register route
 export const register = (req, res, next) => {  
   // Check for registration errors
-console.log(Object.keys(req), 'heres')
 	
   const email = req.body.email;
   const firstName = req.body.firstName;
@@ -51,7 +50,6 @@ console.log(Object.keys(req), 'heres')
   if (!password) {
     return res.status(422).send({ error: 'You must enter a password.' });
   }
-
   User.findOne({ email: email }, (err, existingUser) => {
       if (err) { return next(err); }
 
@@ -76,7 +74,7 @@ console.log(Object.keys(req), 'heres')
         // Respond with JWT if user was created
 
         const userData = setUserInfo(user);
-
+				console.log(userData, 'userDate')
         res.status(201).json({
           token: generateToken(userData),
           user: userData

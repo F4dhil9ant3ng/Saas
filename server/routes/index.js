@@ -1,23 +1,25 @@
 import express from 'express';
 import passport from 'passport';
-import { login, register } from '../controllers/auth';
+import {login, register} from '../controllers/auth';
 
 const requireAuth = passport.authenticate('jwt', {session: false});
-const requireLogin = passport.authenticate('local', {session: false})
+const requireLogin = passport.authenticate('local', {session: false});
 
 
-const routes = (app) => {
-  const authRoutes = express.Router();
-  const apiRoutes = express.Router();
+module.exports = (router) => {
+  // const authRoutes = express.Router();
+  // const apiRoutes = express.Router();
+  // app.use('/api', apiRoutes);  
 
-  apiRoutes.use('/auth', authRoutes);
-  authRoutes.post('/login', requireLogin, login);
-  authRoutes.post('/register', register)
+  // router.route('/auth', authRoutes);
+  router.route('/login')
+    .post(requireLogin, login);
+  router.route('/register')
+    .post(register);
 
-  app.use('/api', apiRoutes);
-  // app.get('*', (req, res) => {
-  //   res.send('This is great man. Loving this work guys')
-  // })
-}
+    router.get('/*', function(req, res, next) {
+      res.send('Welcome to the index page');
+    });
+};
 
-export default routes;
+// export default routes;

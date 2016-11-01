@@ -26,10 +26,11 @@ const UserSchema = mongoose.Schema({
 },{
 	timestamps: true
 })
-
-UserSchema.pre('save', (next) => {
+const user = this;
+UserSchema.pre('save', function(next){
 	const user = this;
-	SALT = 5;
+	console.log(user, 'user', this, 'thsis')
+	const SALT = 5;
 	if(!user.isModified('password')) next();
 	bcrypt.genSalt(SALT, (err, salt) => {
 		if (err) next(err);
@@ -52,4 +53,4 @@ UserSchema.methods.comparePassword = (pw, cb) => {
 	})
 }
 
-export default UserSchema;
+export default mongoose.model('User', UserSchema);
