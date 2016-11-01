@@ -14,7 +14,7 @@ const setUserInfo = (req) => ({
 
 // Generate token function
 const generateToken = (user) => {
-	jwt.sign(user.id, config.secret, {
+	return jwt.sign(user.id, config.secret, {
 		expiresIn: '1680h'
 	})
 };
@@ -74,7 +74,6 @@ export const register = (req, res, next) => {
         // Respond with JWT if user was created
 
         const userData = setUserInfo(user);
-				console.log(userData, 'userDate')
         res.status(201).json({
           token: generateToken(userData),
           user: userData

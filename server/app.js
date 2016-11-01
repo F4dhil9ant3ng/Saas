@@ -8,9 +8,9 @@ import mongoose from 'mongoose';
 
 import config from './config/envConfig';
 
+mongoose.Promise = global.Promise;
 mongoose.connect(config.db);
-const routes = require('./routes');
-
+import routes from './routes';
 
 const app = express();
 const apiRoutes = express.Router();
@@ -37,33 +37,32 @@ app.use(function (req, res, next) {
 });
 
 app.use('/api', apiRoutes);
-// // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   const err = new Error('Not Found');
-//   err.status = 404;
-//   next(err);
-// });
 
-// // error handlers development error handler will print stacktrace
-// if (app.get('env') === 'development') {
-//   app
-//     .use(function (err, req, res, next) {
-//       res.status(err.status || 500);
-//       res.render('error', {
-//         message: err.message,
-//         error: err
-//       });
-//     });
-// }
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
-// // production error handler no stacktraces leaked to user
-// app
-//   .use(function (err, req, res, next) {
-//     res.status(err.status || 500);
-//     res.render('error', {
-//       message: err.message,
-//       error: {}
-//     });
-//   });
+// error handlers development error handler will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function (err, req, res, next) {
+      res.status(err.status || 500);
+      res.render('error', {
+        message: err.message,
+        error: err
+      });
+    });
+}
+
+// production error handler no stacktraces leaked to user
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: {}
+    });
+  });
 
 export default app;

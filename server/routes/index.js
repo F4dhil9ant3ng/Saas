@@ -6,12 +6,7 @@ const requireAuth = passport.authenticate('jwt', {session: false});
 const requireLogin = passport.authenticate('local', {session: false});
 
 
-module.exports = (router) => {
-  // const authRoutes = express.Router();
-  // const apiRoutes = express.Router();
-  // app.use('/api', apiRoutes);  
-
-  // router.route('/auth', authRoutes);
+const routes = (router) => {
   router.route('/login')
     .post(requireLogin, login);
   router.route('/register')
@@ -22,4 +17,4 @@ module.exports = (router) => {
     });
 };
 
-// export default routes;
+export default routes;
