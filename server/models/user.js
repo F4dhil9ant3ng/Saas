@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'nodejs-bcrypt';
+import bcrypt from 'bcrypt-nodejs';
 
 const UserSchema = mongoose.Schema({
 	email: {
@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema({
 		type: String,
 		enum: ['Crew', 'Captain', 'Coach'],
 		default: 'Crew' 
-	}
+	},
 	resetPasswordToken: {type: String},
 	resetPasswordExpires: {type: Date}
 },{
@@ -41,6 +41,15 @@ UserSchema.pre('save', (next) => {
 	})
 });
 
-UserSchema.methods.validPassword = (password) => {
+UserSchema.methods.validPassword = (password, cb) => {
     return bcrypt.compareSync(password, this.password);
 }
+
+UserSchema.methods.comparePassword = (pw, cb) => {
+	bcrypt.compare(pw, this.password, (err, isMatch) => {
+		if(err) cb(err);
+		cb(null, isMatch);
+	})
+}
+
+export default UserSchema;
